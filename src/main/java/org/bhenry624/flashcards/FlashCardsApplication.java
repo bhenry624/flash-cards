@@ -1,24 +1,28 @@
 package org.bhenry624.flashcards;
 
+import org.bhenry624.flashcards.ui.MainMenu;
+
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class FlashCardsApplication {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-
-        String name = createDataSet(input);
-
-        System.out.println("Data Set created, loading....");
-
-        Map<String, String> cards = HashMapFromTextFile(name);
-
-        List<Map.Entry<String, String>> shuffledCards =
-                new ArrayList<>(cards.entrySet());
-
-        Collections.shuffle(shuffledCards);
-
-        input.close();
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.mainMenu();
+//        Scanner input = new Scanner(System.in);
+//
+//        String name = createDataSet(input);
+//
+//        System.out.println("Data Set created, loading....");
+//
+//        Map<String, String> cards = HashMapFromTextFile(name);
+//
+//        List<Map.Entry<String, String>> shuffledCards =
+//                new ArrayList<>(cards.entrySet());
+//
+//        Collections.shuffle(shuffledCards);
+//
+//        input.close();
     }
 
     public static Map<String, String> HashMapFromTextFile(String fileName)
@@ -29,26 +33,19 @@ public class Main {
 
         try {
 
-            // create file object
             File file = new File("src/main/resources/dictionaries/" + fileName + ".txt");
 
-            // create BufferedReader object from the File
             br = new BufferedReader(new FileReader(file));
 
             String line = null;
 
-            // read file line by line
             while ((line = br.readLine()) != null) {
 
-                // split the line by :
                 String[] parts = line.split(":");
 
-                // first part is name, second is number
                 String name = parts[0].trim();
                 String number = parts[1].trim();
 
-                // put name, number in HashMap if they are
-                // not empty
                 if (!name.isEmpty() && !number.isEmpty())
                     map.put(name, number);
             }
@@ -57,8 +54,6 @@ public class Main {
             e.printStackTrace();
         }
         finally {
-
-            // Always close the BufferedReader
             if (br != null) {
                 try {
                     br.close();
