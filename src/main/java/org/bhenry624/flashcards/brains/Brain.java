@@ -1,9 +1,6 @@
 package org.bhenry624.flashcards.brains;
 
 import lombok.NoArgsConstructor;
-import org.bhenry624.flashcards.ui.GenerateCards;
-import org.bhenry624.flashcards.ui.MainMenu;
-import org.bhenry624.flashcards.ui.MemoryTest;
 
 import java.io.*;
 import java.util.HashMap;
@@ -11,40 +8,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import static org.bhenry624.flashcards.config.DisplayStrings.*;
+import static org.bhenry624.flashcards.config.NavigationPaths.*;
+
 @NoArgsConstructor
 public class Brain {
     static final Scanner scanner = new Scanner(System.in);
 
-    private static final MainMenu mainMenu = new MainMenu();
-    private static final GenerateCards generateCards = new GenerateCards();
-    private static final MemoryTest memoryTest = new MemoryTest();
-
     public void startUp() {
-        mainMenu.show();
+        waitForKeyEvent(MAIN_MENU_STRING, MAIN_MENU_PATHS);
     }
 
-    public static void waitForKeyEvent(String displayMessage, List<Character> paths, String errMessage) {
+    public static void waitForKeyEvent(String displayMessage, List<Character> paths) {
         System.out.println(displayMessage);
 
         char keyInput = scanner.next().toUpperCase().charAt(0);
 
         while (!paths.contains(keyInput)){
-            System.out.println(errMessage);
+            System.out.println("Try Again!");
 
             keyInput = scanner.next().toUpperCase().charAt(0);
         }
 
         switch(keyInput){
             case 'M':
-                mainMenu.show();
+                waitForKeyEvent(MAIN_MENU_STRING, MAIN_MENU_PATHS);
             case 'G':
-                generateCards.show();
+                waitForKeyEvent(GENERATE_CARDS_STRING, GENERATE_CARDS_PATHS);
             case 'T':
-                memoryTest.show();
+                waitForKeyEvent(MEMORY_TEST_STRING, MEMORY_TEST_PATHS);
             case 'E':
                 System.exit(0);
             default:
-                mainMenu.show();
+                waitForKeyEvent(MAIN_MENU_STRING, MAIN_MENU_PATHS);
         }
     }
 
