@@ -1,54 +1,73 @@
-package org.bhenry624.flashcards;
+package org.bhenry624.flashcards.brains;
+
+import lombok.NoArgsConstructor;
+import org.bhenry624.flashcards.ui.GenerateCards;
+import org.bhenry624.flashcards.ui.MainMenu;
+import org.bhenry624.flashcards.ui.MemoryTest;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+@NoArgsConstructor
+public class Brain {
+    static final Scanner scanner = new Scanner(System.in);
 
-        String name = createDataSet(input);
+    private static final MainMenu mainMenu = new MainMenu();
+    private static final GenerateCards generateCards = new GenerateCards();
+    private static final MemoryTest memoryTest = new MemoryTest();
 
-        System.out.println("Data Set created, loading....");
-
-        Map<String, String> cards = HashMapFromTextFile(name);
-
-        List<Map.Entry<String, String>> shuffledCards =
-                new ArrayList<>(cards.entrySet());
-
-        Collections.shuffle(shuffledCards);
-
-        input.close();
+    public void startUp() {
+        mainMenu.show();
     }
 
-    public static Map<String, String> HashMapFromTextFile(String fileName)
-    {
+    public static void waitForKeyEvent(String displayMessage, List<Character> paths, String errMessage) {
+        System.out.println(displayMessage);
+
+        char keyInput = scanner.next().toUpperCase().charAt(0);
+
+        while (!paths.contains(keyInput)){
+            System.out.println(errMessage);
+
+            keyInput = scanner.next().toUpperCase().charAt(0);
+        }
+
+        switch(keyInput){
+            case 'M':
+                mainMenu.show();
+            case 'G':
+                generateCards.show();
+            case 'T':
+                memoryTest.show();
+            case 'E':
+                System.exit(0);
+            default:
+                mainMenu.show();
+        }
+    }
+
+    public static Map<String, String> HashMapFromTextFile(String fileName) {
 
         HashMap<String, String> map = new HashMap<>();
         BufferedReader br = null;
 
         try {
 
-            // create file object
             File file = new File("src/main/resources/dictionaries/" + fileName + ".txt");
 
-            // create BufferedReader object from the File
             br = new BufferedReader(new FileReader(file));
 
             String line = null;
 
-            // read file line by line
             while ((line = br.readLine()) != null) {
 
-                // split the line by :
                 String[] parts = line.split(":");
 
-                // first part is name, second is number
                 String name = parts[0].trim();
                 String number = parts[1].trim();
 
-                // put name, number in HashMap if they are
-                // not empty
                 if (!name.isEmpty() && !number.isEmpty())
                     map.put(name, number);
             }
@@ -57,8 +76,6 @@ public class Main {
             e.printStackTrace();
         }
         finally {
-
-            // Always close the BufferedReader
             if (br != null) {
                 try {
                     br.close();
